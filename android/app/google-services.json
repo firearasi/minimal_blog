@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "267091158642",
+    "firebase_url": "https://chengyan-minimal-blog.firebaseio.com",
+    "project_id": "chengyan-minimal-blog",
+    "storage_bucket": "chengyan-minimal-blog.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267091158642:android:626d0b92a062b9c74644eb",
+        "android_client_info": {
+          "package_name": "com.firearasi.minimal_blog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "267091158642-7t87f1ob8tmlajedeqdd4g7gsipj93nr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxUU0_S1EYEfYsza6ZA39NeUxc3uXgNAo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "267091158642-7t87f1ob8tmlajedeqdd4g7gsipj93nr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
