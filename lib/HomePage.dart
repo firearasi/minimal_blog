@@ -76,8 +76,8 @@ class HomePageState extends State<HomePage> {
 
   void _addNewEntry(BuildContext context) {
     Fluttertoast.showToast(msg: 'TODO: 添加新日志');
-    Navigator.push(context,
-        MaterialPageRoute(builder: (ctx) => PhotoUploadPage(_email, this)));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (ctx) => PhotoUploadPage(_email)));
   }
 
   void _refresh() async {
@@ -95,8 +95,7 @@ class PostList extends StatelessWidget {
   Widget build(BuildContext context) {
     var sb = StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance
-          .collection('posts')
-          .where('userEmail', isEqualTo: this.userEmail)
+          .collection(this.userEmail)
           .orderBy('ticks', descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -106,101 +105,9 @@ class PostList extends StatelessWidget {
             return new Text('Loading...');
           default:
             return new ListView(
-              children:
-                  snapshot.data.documents.map((DocumentSnapshot document) {
-                return Card(
-                  elevation: 10,
-                  margin: EdgeInsets.only(bottom: 10),
-                  child: Container(
-                      margin: EdgeInsets.all(10),
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        document['userEmail'],
-                        style: Theme.of(context).textTheme.subtitle1,
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            document['date'],
-                            style: Theme.of(context).textTheme.subtitle1,
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            document['time'],
-                            style: Theme.of(context).textTheme.subtitle1,
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 3,
-                      ),
-                      Image.network(
-                        document['image'],
-                        fit: BoxFit.cover,
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Expanded(
-                              child: Text(
-                            document['description'],
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.left,
-                            maxLines: 3,
-                          )),
-                          IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () {
-                              Alert(
-                                context: context,
-                                type: AlertType.warning,
-                                title: "删除",
-                                desc: "您确实要删除此blog吗?",
-                                buttons: [
-                                  DialogButton(
-                                    child: Text(
-                                      "确认",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 20),
-                                    ),
-                                    onPressed: () {
-                                      document.reference.delete();
-                                      refresh();
-                                      Navigator.pop(context);
-                                    },
-                                    width: 120,
-                                  ),
-                                  DialogButton(
-                                    child: Text(
-                                      "取消",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 20),
-                                    ),
-                                    onPressed: () => Navigator.pop(context),
-                                    width: 120,
-                                  ),
-                                ],
-                              ).show();
-                            },
-                          )
-                        ],
-                      )
-                    ],
-                  )),
-                );
-              }).toList(),
+              children: snapshot.data.documents
+                  .map((document) => CardForPost(document, context))
+                  .toList(),
             );
         }
       },
@@ -213,6 +120,100 @@ class PostList extends StatelessWidget {
           refresh();
         });
       },
+    );
+  }
+
+  Card CardForPost(DocumentSnapshot document, BuildContext context) {
+    return Card(
+      elevation: 10,
+      margin: EdgeInsets.only(bottom: 10),
+      child: Container(
+          margin: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                document['userEmail'],
+                style: Theme.of(context).textTheme.subtitle1,
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    document['date'],
+                    style: Theme.of(context).textTheme.subtitle1,
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    document['time'],
+                    style: Theme.of(context).textTheme.subtitle1,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 3,
+              ),
+              Image.network(
+                document['image'],
+                fit: BoxFit.cover,
+              ),
+              SizedBox(
+                height: 2,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                      child: Text(
+                    document['description'],
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.left,
+                    maxLines: 3,
+                  )),
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      Alert(
+                        context: context,
+                        type: AlertType.warning,
+                        title: "删除",
+                        desc: "您确实要删除此blog吗?",
+                        buttons: [
+                          DialogButton(
+                            child: Text(
+                              "确认",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            onPressed: () {
+                              document.reference.delete();
+                              refresh();
+                              Navigator.pop(context);
+                            },
+                            width: 120,
+                          ),
+                          DialogButton(
+                            child: Text(
+                              "取消",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            width: 120,
+                          ),
+                        ],
+                      ).show();
+                    },
+                  )
+                ],
+              )
+            ],
+          )),
     );
   }
 }

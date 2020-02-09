@@ -10,8 +10,8 @@ import 'HomePage.dart';
 
 class PhotoUploadPage extends StatefulWidget {
   final String userEmail;
-  final HomePageState homePageState;
-  PhotoUploadPage(this.userEmail, this.homePageState);
+
+  PhotoUploadPage(this.userEmail);
 
   @override
   State<StatefulWidget> createState() {
@@ -144,7 +144,7 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
         url=imageUrl.toString();
 
         saveToDatabase(url, timeKey);
-        widget.homePageState.setState(() { });
+        //widget.homePageState.setState(() { });
       }
       catch(e) {
         Fluttertoast.showToast(msg: '错误: $e.toString()');
@@ -173,7 +173,7 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
 //       DatabaseReference dbRef = FirebaseDatabase.instance.reference();
 //       dbRef.push().set(data);
 
-        Firestore.instance.collection('posts').document().setData(data);
+        Firestore.instance.collection(widget.userEmail).document().setData(data);
      }
     catch(e) {
       Fluttertoast.showToast(msg: 'DBError: $e.toString()');
