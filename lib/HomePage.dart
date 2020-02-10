@@ -40,28 +40,72 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home $_email'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.local_bar),
-            iconSize: 30,
-            color: Colors.white,
-            onPressed: _logoutUser,
-          ),
-        ],
+        appBar: AppBar(
+          title: Text('Home of $_email'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.local_bar),
+              iconSize: 30,
+              color: Colors.white,
+              onPressed: _logoutUser,
+            ),
+          ],
+        ),
+        body: Center(
+          child: PostList(_email, _refresh),
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add_a_photo),
+          onPressed: () {
+            _addNewEntry(context);
+          },
+          elevation: 10,
+        ),
+        drawer: buildDrawer());
+  }
+
+  Widget buildDrawer() {
+    return Drawer(
+  // Add a ListView to the drawer. This ensures the user can scroll
+  // through the options in the drawer if there isn't enough vertical
+  // space to fit everything.
+  child: ListView(
+    // Important: Remove any padding from the ListView.
+    padding: EdgeInsets.zero,
+    children: <Widget>[
+      SizedBox(
+        height: 130,
+        child:DrawerHeader(
+        child: Row(
+          children: <Widget>[
+            Image.asset('images/blog.png',fit: BoxFit.cover,),
+            SizedBox(width: 30,),
+            Text('Minimalist Blog', style: TextStyle(color: Colors.white,fontSize: 20)),
+          ],
+        ),
+        decoration: BoxDecoration(
+          color: Colors.pink,
+        ),
+        
+      )
       ),
-      body: Center(
-        child: PostList(_email, _refresh),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add_a_photo),
-        onPressed: () {
-          _addNewEntry(context);
+      ListTile(
+        leading: Icon(Icons.view_list),
+        title: Text('关注', style: TextStyle(fontSize: 15),),
+        onTap: () {
+          Navigator.of(context).pop();
         },
-        elevation: 10,
       ),
-    );
+      ListTile(
+        leading: Icon(Icons.folder),
+        title: Text('收藏', style: TextStyle(fontSize: 15),),
+        onTap: () {
+          Navigator.of(context).pop();        },
+      ),
+      
+    ],
+  ),
+);
   }
 
   void _logoutUser() async {
